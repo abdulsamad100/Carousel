@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Ethnocentric RG";
+  src: 
+    local("Ethnocentric RG"),
+    url("ethnocentric-rg-it.otf") format("opentype");
+}
+
+
 body {
   width: 100vw;
   height: 100vh;
@@ -66,7 +74,7 @@ body {
 }
 
 #heading {
-  font-family: sans-serif;
+  font-family: "Ethnocentric RG",sans-serif;
   font-weight: 700;
   position: absolute;
   top: 50%;
@@ -74,7 +82,7 @@ body {
   transform: translate(-55%, -50%);
   color: white;
   font-size: 5vw;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 6px 6px 6px rgba(0, 0, 0, 0.7);
   text-align: center;
 }
 
@@ -97,4 +105,13 @@ p{
   top: 0;
   background-color: rgba(0, 0, 0, 0.65);
   z-index: 0;
+}
+
+@media (max-width:670px) {
+  #heading {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 7vw;
+  }
 }
