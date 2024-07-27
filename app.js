@@ -13,24 +13,40 @@ let mainImage = document.querySelector("#mainimg");
 let nextImage = document.querySelector("#nextimg");
 let heading = document.querySelector("#heading");
 let isFirstImageChange = true;
+let textChangePromise;
 
 function updateImage(index) {
+  if (textChangePromise) {
+    textChangePromise.then(() => {
+      performImageUpdate(index);
+    });
+  } else {
+    performImageUpdate(index);
+  }
+}
+
+function performImageUpdate(index) {
   mainImage.classList.add("fade-out");
   nextImage.src = cars[index].src;
   nextImage.classList.add("fade-in");
-  setTimeout(() => {
-    if (isFirstImageChange) {
-      detypeText(cars[index].heading);
-    } else {
-      typeText(cars[index].heading);
-    }
-    mainImage.src = cars[index].src;
-    mainImage.classList.remove("fade-out");
-    nextImage.classList.remove("fade-in");
-  }, 1000);
+  
+  textChangePromise = new Promise((resolve) => {
+    setTimeout(() => {
+      if (isFirstImageChange) {
+        typeText(cars[index].heading, resolve);
+        isFirstImageChange = false;
+      } else {
+        detypeText(cars[index].heading, resolve);
+      }
+    }, 1000);
+  });
+
+  mainImage.src = cars[index].src;
+  mainImage.classList.remove("fade-out");
+  nextImage.classList.remove("fade-in");
 }
 
-function typeText(text) {
+function typeText(text, callback) {
   heading.textContent = "";
   let i = 0;
   let interval = setInterval(() => {
@@ -39,11 +55,12 @@ function typeText(text) {
       i++;
     } else {
       clearInterval(interval);
+      callback();
     }
   }, 50);
 }
 
-function detypeText(text) {
+function detypeText(text, callback) {
   let i = text.length - 1;
   let interval = setInterval(() => {
     if (i >= 0) {
@@ -51,13 +68,13 @@ function detypeText(text) {
       i--;
     } else {
       clearInterval(interval);
-      typeText(text);
+      typeText(text, callback);
     }
   }, 50);
 }
 
 mainImage.src = cars[currind].src;
-typeText(cars[currind].heading);
+typeText(cars[currind].heading, () => {});
 
 const previous = document.querySelector("#previous");
 const next = document.querySelector("#next");
